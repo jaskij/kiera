@@ -13,7 +13,7 @@
     {{ .Content }}
 
     <p>
-      {{ range first 1 (.Pages.ByParam "chapter")}}
+      {{range first 1 (sort (.Pages.ByParam "chapter") ".Params.chapter" "asc")}}
         <strong>First chapter:</strong>
         <a href="{{ .Permalink }}">{{ .Parent.Title }} {{ .Params.chapter}}: {{ .Title | markdownify }}</a>
       {{ end }}
@@ -21,8 +21,10 @@
 
     <h2>Chapters</h2>
 
-    {{range (.Pages.ByParam "chapter")}}
-    {{.Params.chapter}} {{.Title}} <br />
+    {{range sort (.Pages.ByParam "chapter") ".Params.chapter" "asc"}}
+    {{if (isset .Params "chapter")}}
+      Chapter {{.Params.chapter}}: {{.Title}} <br />
+    {{end}}
     {{end}}
 
     {{ range (.Paginate (.Data.Pages.GroupByDate "2006")).PageGroups  }}
@@ -33,7 +35,10 @@
         <li>
             <a href="{{ .Permalink }}">
               {{ if .Draft }}DRAFT: {{end}}{{ .Parent.Title }}<br/>
-              Chapter {{ .Params.chapter}} {{ .Title | markdownify }}
+              {{if (isset .Params "chapter")}}
+                Chapter: {{ .Params.chapter}}
+              {{end}}
+              {{ .Title | markdownify }}
             </a>
             <time class="date-meta">{{ .Date.Format "Jan 2" }}</time>
         </li>
