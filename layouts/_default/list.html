@@ -21,6 +21,10 @@
 
     <h2>Chapters</h2>
 
+    {{range (.Pages.ByParam "chapter")}}
+    {{.Params.chapter}} {{.Title}} <br />
+    {{end}}
+
     {{ range (.Paginate (.Data.Pages.GroupByDate "2006")).PageGroups  }}
 
     <h3>{{ .Key }}</h3>
